@@ -1,0 +1,135 @@
+***********************************************
+1.#download and unzip
+wget https://httpd.apache.org/download.cgi#apache24/httpd-2.4.29.tar.gz
+tar -xvf httpd-2.4.29.tar.gz
+***********************************************
+2.#install and configure apache
+cd httpd-2.4.29
+sudo ./configure -prefix=/path where you want apache home
+************************************************************
+3.#prerequisites - common errors while installing
+#apr and apr-util and pcre 
+cd httpd-2.4.29
+wget http://www-us.apache.org/dist//apr/apr-1.6.3.tar.gz
+ tar -xvf apr-1.6.3.tar.gz
+ mv apr-1.6.3 apr
+ wget http://www-us.apache.org/dist//apr/apr-util-1.6.1.tar.gz
+ tar -xvf apr-util-1.6.1.tar.gz
+ mv apr-util-1.6.1 apr-util
+sudo yum install pcre-devel -y
+*****************************************************************
+4. if step 2 had any errors execute step3 and excute step 4 below
+cd httpd-2.4.29
+./configure --prefix=/home/ec2-user/ --with-included-apr
+sudo make
+sudo make install
+
+****************************************************************************
+Integrate Apache with Tomcat via mod_jk module 
+
+1. Download mod_jk 
+wget http://www-eu.apache.org/dist/tomcat/tomcat-connectors/jk/tomcat-connectors-1.2.42-src.tar.gz
+tar -xvf tomcat-connectors-1.2.42-src.tar.gz
+cd tomcat-connectors-1.2.42-src
+sudo ./configure -with-apxs=/usr/bin/apxs
+****************************************************************************
+Integrate Apache with Tomcat via mod_jk module 
+
+1. Download mod_jk 
+wget http://www-eu.apache.org/dist/tomcat/tomcat-connectors/jk/tomcat-connectors-1.2.42-src.tar.gz
+tar -xvf tomcat-connectors-1.2.42-src.tar.gz
+cd tomcat-connectors-1.2.42-src
+sudo ./configure -with-apxs=/usr/bin/apxs
+****************************************************************************
+Integrate Apache with Tomcat via mod_jk module 
+
+1. Download mod_jk 
+wget http://www-eu.apache.org/dist/tomcat/tomcat-connectors/jk/tomcat-connectors-1.2.42-src.tar.gz
+tar -xvf tomcat-connectors-1.2.42-src.tar.gz
+cd tomcat-connectors-1.2.42-src
+sudo ./configure -with-apxs=/usr/bin/apxs
+****************************************************************************
+Integrate Apache with Tomcat via mod_jk module 
+
+1. Download mod_jk 
+wget http://www-eu.apache.org/dist/tomcat/tomcat-connectors/jk/tomcat-connectors-1.2.42-src.tar.gz
+tar -xvf tomcat-connectors-1.2.42-src.tar.gz
+cd tomcat-connectors-1.2.42-src
+sudo ./configure -with-apxs=/usr/bin/apxs
+****************************************************************************
+Integrate Apache with Tomcat via mod_jk module 
+
+1. Download mod_jk 
+wget http://www-eu.apache.org/dist/tomcat/tomcat-connectors/jk/tomcat-connectors-1.2.42-src.tar.gz
+tar -xvf tomcat-connectors-1.2.42-src.tar.gz
+2. Install and configure mod_jk
+cd tomcat-connectors-1.2.42-src
+sudo ./configure --with-apxs=/home/ec2-user/bin/apxs (give the location of apxs it will be in httpd/bin location)
+( apxs is a tool for building and installing extension modules for the Apache HyperText Transfer Protocol (HTTP) server)
+sudo make
+sudo make install
+3. mod_jk.so will be created in modules directory of apache
+4. modify httpd.conf file: add below lines in httpd.conf
+   ************************************
+#LoadModule jk_module nad give locaton of mod_jk.so 
+LoadModule jk_module modules/mod_jk.so 
+#config file of mod_jk
+JkWorkersFile conf/worker.properties (we will create worker.properties in conf directory in Step6)
+#Redirect requests to Worker1 node
+JkMount /* loadbalancer (this is defining loadbalancer name)
+JkMount /status stat    (this is for getting the status of loadbalancing)
+#set JK loglevel to debug
+JkLogLevel debug
+<Location /server-status>
+   SetHandler server-status
+   Order deny,allow
+   Allow from all
+   Require all granted
+</Location>
+6.create worker.properties file in apache/conf folder and define the properties in it
+  # Define a worker named 'worker1' (more workers can be added as comma separated values)
+
+worker.list=loadbalancer,stat
+
+# Define Worker1 ( any name can be given like node1)
+
+worker.worker1.type=ajp13 (mod_jk connects to tomcat server by ajp protocol, ajp port must be opened in Tomcat)
+
+worker.worker1.host=18.216.133.162 ( hostname or ip address of your tomcat instance)
+
+worker.worker1.port=8009 (port number for ajp protocol)
+
+# Define worker2
+
+worker.worker2.type=
+
+worker.worker2.host=
+
+worker.worker3.port=
+
+#Define loadbalaning properties
+
+worker.loadbalancer.type=lb
+worker.loadbalancer.balance_workers=worker1,worker2  (listing the hosts between which loadbalancing has to be done)
+worker.loadbalancer.sticky_session=1
+
+#Status Worker for managing load balancer
+worker.stat.type=status
+7.restart apache
+check for mod_jk.log in apache/logs folder --- apache will be loaded with mod_jk.so module
+8. open port on Tomcat server
+#edit server.xml file like below
+/var/lib/tomcat7/conf/server.xml
+*******************************************************************
+<!-- Define an AJP 1.3 Connector on port 8009 --> 
+
+<Connector port="8009" protocol="AJP/1.3" redirectPort="8443" />
+****************************************************************************
+9. restart tomcat
+10. now load the apacheserver:80/applcation name --> it should load the applcation on Tomcat
+
+
+ 
+
+
+
