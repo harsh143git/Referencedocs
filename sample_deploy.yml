@@ -1,6 +1,7 @@
 ---
 - hosts: all
   gather_facts: false
+  remote_user:
   tasks:
     - name: remove bin,lib,programs files
       file: path= {{ item.dest }} state=absent

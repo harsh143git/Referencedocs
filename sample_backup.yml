@@ -1,6 +1,7 @@
 ---
 - hosts: all
   gather_facts: true
+  remote_user:
   tasks:
     - name: backup of bin,lib,programs,scope.ear and jasper files
       archive: path={{ item.src }} dest={{ item.dest }} format=zip

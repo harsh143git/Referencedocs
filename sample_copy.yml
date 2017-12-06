@@ -1,6 +1,7 @@
 ---
 - hosts: node2
   gather_facts: false
+  remote_user:
   tasks:
     - name: copy files between remote servers node1 to node 2
       synchronize: src={{ item.src }} dest={{ item.dest }}
