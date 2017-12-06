@@ -1,0 +1,9 @@
+---
+- hosts: all
+  gather_facts: false
+  tasks:
+    - name: remove bin,lib,programs files
+      file: path={{ item.dest }} state=absent
+      with_items:
+      - {dest: "/home/ubuntu/sample1_2017-12-06.zip"}
+      - {dest: "/home/ubuntu/ansible2_2017-12-06.zip"}

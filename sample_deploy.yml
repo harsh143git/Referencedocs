@@ -1,0 +1,19 @@
+---
+- hosts: all
+  gather_facts: false
+  tasks:
+    - name: remove bin,lib,programs files
+      file: path= {{ item.dest }} state=absent
+      with_items:
+      - {dest: "/path"}
+      - {dest: "/path"}
+    - name: unzip copied zip files into CBS and jasper directory
+      unarchive src= {{ item.src }} dest= {{ item.dest }} copy=no
+      with_items:
+      - {src: "/datadirectorypath/zip1", dest: "/CBSpath"}
+      - {src: "/datadirectorypath/zip2", dest: "/CBSpath"}
+      - {src: "/datadirectorypath/Zip3", dest: "/CBSpath"}
+      - {src: "/datadirectorypath/zip4", dest: "/Jasperpath"}
+    - name: replace scope.ear
+      copy: src=/datadirectorypath/scope.ear dest=/wmshome/distribution/ remote_src=yes
+      

@@ -1,0 +1,6 @@
+---
+- hosts: all
+  gather_facts: false
+  tasks:
+    - name: unarchive files
+      unarchive: src=/home/ubuntu/ansible.zip dest=/home/ubuntu/sample copy=no 
