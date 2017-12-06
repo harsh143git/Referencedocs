@@ -1,0 +1,10 @@
+---
+- hosts: all
+  gather_facts: true
+  tasks:
+    - name: backup of bin,lib,programs,scope.ear and jasper files
+      archive: path={{ item.src }} dest={{ item.dest }} format=zip
+      with_items:
+      - {src: "/path", dest: "/path/bkpname_{{ ansible_date_time.date }}.zip"}
+      - {src: "/path", dest: "/path/bkpname_{{ ansible_date_time.date }}.zip"}
+     

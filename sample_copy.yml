@@ -1,0 +1,10 @@
+---
+- hosts: node2
+  gather_facts: false
+  tasks:
+    - name: copy files between remote servers node1 to node 2
+      synchronize: src={{ item.src }} dest={{ item.dest }}
+      with_items: 
+    - {src: "/path on destination i.e. node2", dest: "/path on source i.e. node1"}
+    - {src: "/path on destination i.e. node2", dest: "/path on source i.e. node1"}
+      delegate_to: node1

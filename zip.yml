@@ -1,0 +1,9 @@
+---
+- hosts: all
+  gather_facts: true
+  tasks:
+    - name: Zip files
+      archive: path={{ item.src }} dest={{ item.dest }} format=zip
+      with_items:
+      - {src: "/home/ubuntu/sample1", dest: "/home/ubuntu/sample1_{{ ansible_date_time.date }}.zip"}
+      - {src: "/home/ubuntu/ansible", dest: "/home/ubuntu/ansible2_{{ ansible_date_time.date }}.zip"}

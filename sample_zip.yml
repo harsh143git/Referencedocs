@@ -1,0 +1,9 @@
+---
+- hosts: all
+  gather_facts: true
+  tasks:
+    - name: zip bin,lib,programs,scope.ear and jasper files from Source
+      archive: path={{ item.src }} dest={{ item.dest }} format=zip
+      with_items:
+      - {src: "/path", dest: "/path/name_{{ ansible_date_time.date }}.zip"}
+      - {src: "/path", dest: "/path/name_{{ ansible_date_time.date }}.zip"}

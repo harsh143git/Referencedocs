@@ -1,0 +1,10 @@
+---
+- hosts: node2
+  gather_facts: false
+  tasks:
+    - name: copy files between remote servers node1 to node 2
+      synchronize: src={{ item.src }} dest={{ item.dest }}
+      with_items:
+      - {src: "/home/ubuntu/addressbook.war", dest: "/home/ubuntu/"}
+      - {src: "/home/ubuntu/sample1_2017-12-06.zip", dest: "/home/ubuntu/"}
+      delegate_to: node1
